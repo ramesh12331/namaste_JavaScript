@@ -70,28 +70,57 @@ api.createOrder(cart, function () {
 ```
           ┌──────────────────────┐
           │   Normal Callback    │
+          │ (Async execution)    │
           └──────────┬───────────┘
+                     │
                      ▼
-          ✔ Async Code Easy
+         Example: setTimeout(fn, 2000)
+                     │
+                     ▼
+          ✔ Easy to understand
+          ✔ Useful for async code
           ─────────────────────────
 
-          ┌──────────────────────┐
-          │   Callback Hell      │
-          └──────────┬───────────┘
                      ▼
-          ❌ Nested Functions
+          ┌──────────────────────┐
+          │    Callback Hell     │
+          │ (Nested callbacks)   │
+          └──────────┬───────────┘
+                     │
+                     ▼
+   createOrder(cart, function() {
+       proceedToPayment(function() {
+           showOrderSummary(function() {
+               updateWallet();
+           });
+       });
+   });
+
+                     │
+                     ▼
+          ❌ Hard to read
+          ❌ Hard to maintain
           ❌ Pyramid of Doom
           ─────────────────────────
 
+                     ▼
           ┌────────────────────────┐
           │ Inversion of Control   │
+          │ (Lose control of flow) │
           └──────────┬─────────────┘
+                     │
                      ▼
-          ❌ Control loss
-          ❌ Unreliable execution
-          ─────────────────────────
+   We trust parent function
+   to call our callback correctly.
+   - What if it fails?
+   - What if it calls twice?
+   - What if it never calls?
 
-          ✅ Solution → Promises / Async-Await
+                     ▼
+          ⚠️ Risky & Unreliable
+          → Promises/Async Await
+          are better solutions
+
 ```
 
 ---
