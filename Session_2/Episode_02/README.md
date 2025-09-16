@@ -21,12 +21,18 @@ Promises solve both problems.
 
 ## 🖥️ Example 1 – Without Promise (Callback Way)
 ```js
+// An array representing items added to the shopping cart
 const cart = ["shoes", "pants", "kurta"];
 
-// Using callback
+// Using a callback function to handle async operation
 createOrder(cart, function (orderId) {
+  // Once the order is successfully created (async completed),
+  // the callback function runs and receives "orderId" as an argument.
+  
+  // Then we pass that orderId into the next async function:
   proceedToPayment(orderId);
 });
+
 ```
 
 ❌ Problem: We depend on `createOrder` to call our callback correctly (Inversion of Control).  
