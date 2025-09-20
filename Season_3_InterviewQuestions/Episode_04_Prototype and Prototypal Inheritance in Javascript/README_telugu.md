@@ -140,3 +140,4 @@ p1.sayHello();
 ---
 
 ✅ ఇప్పుడు నీకు **Prototype, Prototypal Inheritance, Prototype Chain, Inheritance** అన్నీ క్లియర్ అయ్యాయి 🚀  
+ 
