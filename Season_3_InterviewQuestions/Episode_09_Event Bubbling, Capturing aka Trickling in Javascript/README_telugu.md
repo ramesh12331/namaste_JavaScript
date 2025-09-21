@@ -1,53 +1,79 @@
-# ⚡ Event Bubbling & Capturing (Trickling) in JavaScript - తెలుగు వెర్షన్
+# ⚡ JavaScript లో Event Bubbling & Capturing (Trickling)
+
+DOM లో ఏదైనా Event చోటు చేసుకుంటే, అది కేవలం target element మాత్రమే ప్రభావితం చేయదు. అది DOM tree లో **phases** లో travel అవుతుంది. ఈ phases ని తెలుసుకోవడం చాలా ముఖ్యం, ఎందుకంటే అవి event ను ఎలా handle చేయాలో నిర్ణయిస్తాయి.
 
 ---
 
-## 📌 Event Bubbling అంటే ఏమిటి?
-- ఒక ఎలిమెంట్ (ఉదా: `child`) పై click చేసినప్పుడు, ఆ ఈవెంట్ మొదట **ఆ ఎలిమెంట్** మీద trigger అవుతుంది.  
-- ఆ తరువాత **దాని parent → grandparent → body → html → document** లాగా పైకి వెళుతుంది.  
-- అంటే ఈవెంట్ **కిందనుండి పైకి (Bottom → Top)** వెళ్తుంది.  
+## 📌 1. Event Propagation Phases
 
-👉 దీన్నే **Event Bubbling** అంటారు.  
-డిఫాల్ట్‌గా JavaScript ఈవెంట్స్ bubbling phase లోనే trigger అవుతాయి.  
+1. **Capturing Phase (Trickling)** → Event **top → down** (document → element) ప్రయాణిస్తుంది.
+2. **Target Phase** → Event target element వద్ద handle అవుతుంది.
+3. **Bubbling Phase** → Event **bottom → up** (element → document) propagate అవుతుంది.
 
 ---
 
-## 📌 Event Capturing (లేదా Trickling) అంటే ఏమిటి?
-- ఇది **Event Bubbling కి విరుద్ధం**.  
-- ఈవెంట్ **పైనుండి కిందకి (Top → Bottom)** వస్తుంది.  
-- మొదట `document` → `html` → `body` → `grandparent` → `parent` → చివరికి `child`.  
+## 📌 2. Event Bubbling
 
-👉 దీన్నే **Capturing Phase** లేదా **Trickling** అంటారు.  
+* JavaScript లో **default behavior**.
+* Event target నుండి పైకి ancestor elements వరకు propagate అవుతుంది.
 
 ---
 
-## 📌 Syntax
+## 📌 3. Event Capturing (Trickling)
+
+* Optional phase (enable చేయాలి).
+* Event **root నుండి target వరకు** travel అవుతుంది.
+
+Capturing enable చేయడానికి:
+
 ```js
-element.addEventListener("click", handler, useCapture);
+element.addEventListener("event", handler, true);
 ```
-- **useCapture = false (default)** → Bubbling  
-- **useCapture = true** → Capturing  
 
 ---
 
-## 📌 కోడ్ Examples
+## 📌 4. Execution Order
 
-### ✅ Bubbling (false లేదా default)
+| Phase     | దిశ         | ఉదాహరణ క్రమం                                   |
+| --------- | ----------- | ---------------------------------------------- |
+| Capturing | Top → Down  | Document → Body → Grandparent → Parent → Child |
+| Target    | Target వద్ద | Child                                          |
+| Bubbling  | Bottom → Up | Child → Parent → Grandparent → Body → Document |
+
+---
+
+## 📌 5. కోడ్ ఉదాహరణలు
+
+### ✅ HTML Structure
+
+```html
+<div id="grandparent">
+  <div id="parent">
+    <div id="child"></div>
+  </div>
+</div>
+```
+
+---
+
+### Example 1: Bubbling (Default / false)
+
 ```js
-grandparent.addEventListener("click", () => {
+document.querySelector("#grandparent").addEventListener("click", () => {
   console.log("Grandparent (Bubbling)");
 }, false);
 
-parent.addEventListener("click", () => {
+document.querySelector("#parent").addEventListener("click", () => {
   console.log("Parent (Bubbling)");
 }, false);
 
-child.addEventListener("click", () => {
+document.querySelector("#child").addEventListener("click", () => {
   console.log("Child (Bubbling)");
 }, false);
 ```
 
-👉 `child` click చేస్తే Output:
+**`#child` పై click చేస్తే log**:
+
 ```
 Child (Bubbling)
 Parent (Bubbling)
@@ -56,22 +82,24 @@ Grandparent (Bubbling)
 
 ---
 
-### ✅ Capturing (true)
+### Example 2: Capturing (`true`)
+
 ```js
-grandparent.addEventListener("click", () => {
+document.querySelector("#grandparent").addEventListener("click", () => {
   console.log("Grandparent (Capturing)");
 }, true);
 
-parent.addEventListener("click", () => {
+document.querySelector("#parent").addEventListener("click", () => {
   console.log("Parent (Capturing)");
 }, true);
 
-child.addEventListener("click", () => {
+document.querySelector("#child").addEventListener("click", () => {
   console.log("Child (Capturing)");
 }, true);
 ```
 
-👉 `child` click చేస్తే Output:
+**`#child` పై click చేస్తే log**:
+
 ```
 Grandparent (Capturing)
 Parent (Capturing)
@@ -80,55 +108,73 @@ Child (Capturing)
 
 ---
 
-### ✅ Mixed Example
+### Example 3: Mixed (true vs false)
+
 ```js
-grandparent.addEventListener("click", () => {
+document.querySelector("#grandparent").addEventListener("click", () => {
   console.log("Grandparent (Capturing)");
 }, true);
 
-parent.addEventListener("click", () => {
+document.querySelector("#parent").addEventListener("click", () => {
   console.log("Parent (Bubbling)");
 }, false);
 
-child.addEventListener("click", () => {
-  console.log("Child (Bubbling)");
-}, false);
+document.querySelector("#child").addEventListener("click", () => {
+  console.log("Child (Default Bubbling)");
+});
 ```
 
-👉 `child` click చేస్తే Output:
+**`#child` పై click చేస్తే log**:
+
 ```
 Grandparent (Capturing)
-Child (Bubbling)
+Child (Default Bubbling)
 Parent (Bubbling)
 ```
 
 ---
 
-### ✅ Propagation ఆపడం (stopPropagation)
+### Example 4: Stop Propagation
+
 ```js
-child.addEventListener("click", (e) => {
-  console.log("Only child runs!");
-  e.stopPropagation(); // పైకి లేదా కిందకి వెళ్లదు
+document.querySelector("#child").addEventListener("click", (e) => {
+  console.log("Child clicked only!");
+  e.stopPropagation(); // bubbling/capturing ఆగిపోతుంది
 }, false);
 ```
 
 ---
 
-### ✅ stopImmediatePropagation
+### Example 5: stopImmediatePropagation
+
 ```js
+const child = document.querySelector("#child");
+
 child.addEventListener("click", (e) => {
   console.log("First handler runs");
-  e.stopImmediatePropagation();
+  e.stopImmediatePropagation(); // same element పైని ఇతర handlers run అవ్వవు
 }, false);
 
 child.addEventListener("click", () => {
-  console.log("This will NOT run");
+  console.log("Second handler (won’t run)");
 }, false);
 ```
 
 ---
 
-## 📊 Diagram (Flow)
+### Example 6: Event Delegation
+
+```js
+document.querySelector("#parent").addEventListener("click", (e) => {
+  if (e.target.id === "child") {
+    console.log("Child clicked via delegation");
+  }
+});
+```
+
+---
+
+## 📊 6. Diagram
 
 ```
 Capturing (true):   Document → HTML → Body → Grandparent → Parent → Child
@@ -138,24 +184,40 @@ Bubbling (false):   Child → Parent → Grandparent → Body → HTML → Docum
 
 ---
 
-## 📌 ఇంటర్వ్యూ Questions (తెలుగులో)
+## 📌 7. Interview Questions & Answers
 
-### Q1: Event Bubbling అంటే ఏమిటి?
-👉 Event కిందనుండి పైకి propagate అవ్వడం.  
+**Q1. Event Bubbling అంటే ఏమిటి?**
+👉 Event target నుండి పైకి propagate అవుతుంది.
 
-### Q2: Event Capturing అంటే ఏమిటి?
-👉 Event పైనుండి కిందకి propagate అవ్వడం.  
+**Q2. Event Capturing అంటే ఏమిటి?**
+👉 Event root నుండి target వరకు trickle అవుతుంది.
 
-### Q3: Bubbling & Capturing మధ్య తేడా?
-👉 Bubbling → Bottom → Top  
-👉 Capturing → Top → Bottom  
+**Q3. JavaScript లో default phase ఏది?**
+👉 Bubbling.
 
-### Q4: `addEventListener` లో true / false అంటే ఏమిటి?
-👉 `true` → Capturing, `false` → Bubbling (డిఫాల్ట్).  
+**Q4. Capturing ఎలా enable చేయాలి?**
+👉 `addEventListener("event", handler, true)` ఉపయోగించండి.
 
-### Q5: Propagation ను ఆపడం ఎలా?
-👉 `event.stopPropagation()` లేదా `event.stopImmediatePropagation()`.  
+**Q5. Event Propagation ని ఎలా ఆపాలి?**
+👉 `e.stopPropagation()` ఉపయోగించండి.
+
+**Q6. stopImmediatePropagation అంటే ఏమిటి?**
+👉 Propagation ఆపడానికి, అదేవిధంగా same element పైని handlers run కావకుండా చేస్తుంది.
+
+**Q7. Event Delegation అంటే ఏమిటి?**
+👉 Parent element కి ఒక listener attach చేసి, multiple children events ను handle చేయడం.
 
 ---
 
-✅ ఇప్పుడు నీకు **Event Bubbling & Capturing** గురించి తెలుగు లో పూర్తి అవగాహన వచ్చింది 🚀  
+## 📊 8. Summary Table
+
+| Concept                  | దిశ                                          | Default | Enable చేయడం                   | Example Use              |
+| ------------------------ | -------------------------------------------- | ------- | ------------------------------ | ------------------------ |
+| Bubbling                 | Bottom → Up                                  | ✅ Yes   | `false`                        | Most events              |
+| Capturing (Trickling)    | Top → Down                                   | ❌ No    | `true`                         | Rare cases               |
+| stopPropagation          | Bubbling/capturing ఆగిపోవడం                  | N/A     | `e.stopPropagation()`          | Parent click block చేయడం |
+| stopImmediatePropagation | Propagation & same element handlers ఆగిపోవడం | N/A     | `e.stopImmediatePropagation()` | Advanced control         |
+
+---
+
+✅ ఇలా, JavaScript లో Event Bubbling, Capturing & Propagation ను examples, diagrams, summary తో సులభంగా అర్థం చేసుకోవచ్చు.
