@@ -1,242 +1,268 @@
+# ⚡ ES6 (ECMAScript 2015) — పూర్తి గైడ్
 
-# ⚡ ES6 పూర్తి గైడ్ – ఆధునిక JavaScript
-
-ECMAScript 2015 (ES6) అనేది JavaScript కి పెద్ద మార్పు తీసుకువచ్చింది. ఇది కొత్త features తో కోడ్‌ను **clean, efficient, readable** చేస్తుంది.
+ఈ గైడ్ core ES6 ఫీచర్స్ ను డిఫినిషన్స్, సింపుల్ ఎగ్జాంపుల్స్, డయాగ్రామ్స్, ఎక్స్‌ప్లనేషన్స్, సారాంశాలతో కవర్ చేస్తుంది.
 
 ---
 
-## 📌 ముఖ్యమైన ES6 Concepts
+## 1) `let`, `const`, `var`
 
-### 1. let & const
-* Block-scoped variables
-* `let` → తిరిగి assign చేయవచ్చు
-* `const` → constant, తిరిగి assign చేయలేం
+**వివరణ:** బ్లాక్ vs ఫంక్షన్ స్కోప్, హోయిస్టింగ్, TDZ.
+
+**ఎగ్జాంపుల్:**
 
 ```javascript
-let x = 10;
-const y = 20;
+var x = 1;
+let y = 2;
+const z = {name: 'Ramesh'};
+z.name = 'Akash';
 ```
 
+**సారాంశం:** సాధారణంగా `const` ఉపయోగించండి, అవసరమైతే `let`, `var` నివారించండి.
+
 ---
 
-### 2. Arrow Functions
-చిన్న syntax, `this` ను bind చేయదు.
+## 2) Arrow Functions `=>`
+
+**వివరణ:** చిన్న సింటాక్స్, lexical `this`.
+
+**ఎగ్జాంపుల్:**
 
 ```javascript
-const add = (a, b) => a + b;
+const add = (a,b) => a+b;
 ```
 
+**సారాంశం:** clean, readable, callbacks కోసం ideal.
+
 ---
 
-### 3. Template Literals
-Backticks తో string interpolation.
+## 3) Template Literals
 
 ```javascript
-let name = "Ramesh";
+let name = 'Ramesh';
 console.log(`Hello, ${name}!`);
 ```
 
+**సారాంశం:** dynamic, multi-line strings.
+
 ---
 
-### 4. Default Parameters
-ఫంక్షన్ కు default values ఇవ్వడం.
+## 4) Default Parameters
 
 ```javascript
-function greet(msg = "Hello") {
-  console.log(msg);
-}
+function greet(name='Guest'){ console.log(`Hello, ${name}`); }
 greet();
 ```
 
+**సారాంశం:** undefined arguments నివారిస్తుంది.
+
 ---
 
-### 5. Destructuring
-Array/Object లో values ని విడదీయడం.
+## 5) Rest & Spread
 
 ```javascript
-let [a, b] = [1, 2];
-let {name, age} = {name: "Ramesh", age: 25};
+function sum(...nums){ return nums.reduce((a,b)=>a+b,0); }
+const arr2 = [...[1,2],3,4];
 ```
+
+**సారాంశం:** values ను సులభంగా collect లేదా expand చేయవచ్చు.
 
 ---
 
-### 6. Spread & Rest Operators
-Spread (`...`) → values ని విస్తరించడం  
-Rest (`...`) → values ని కలపడం  
+## 6) Destructuring
 
 ```javascript
-let arr = [1,2,3];
-let newArr = [...arr, 4,5]; 
-
-function sum(...nums) {
-  return nums.reduce((a,b)=>a+b,0);
-}
+const [a,b] = [1,2];
+const {name, age} = {name:'Ramesh', age:25};
 ```
+
+**సారాంశం:** values ను సమర్థవంతంగా extract చేయడానికి.
 
 ---
 
-### 7. Classes
-Object-oriented syntax.
+## 7) Object Enhancements
 
 ```javascript
-class Person {
-  constructor(name) {
-    this.name = name;
-  }
-  greet() {
-    console.log(`Hi, I am ${this.name}`);
-  }
-}
+const x=1,y=2;
+const obj={x,y,sum(){return x+y;},['key_'+x]:'val'};
 ```
+
+**సారాంశం:** cleaner object syntax.
 
 ---
 
-### 8. Promises
-Async operations handle చేయడానికి.
+## 8) Classes
 
 ```javascript
-let promise = new Promise((resolve,reject)=>{
-  setTimeout(()=>resolve("Done!"),1000);
-});
-promise.then(console.log);
+class Animal{constructor(name){this.name=name;} speak(){return `${this.name} makes noise`;} }
+class Dog extends Animal{ speak(){return `${this.name} barks`;} }
 ```
+
+**సారాంశం:** OOP-like syntax, prototype-based.
 
 ---
 
-### 9. Async/Await
-Promises కు simple syntax.
+## 9) Modules
 
 ```javascript
-async function fetchData() {
-  let data = await fetch("https://api.example.com");
-  console.log(data);
-}
+export function add(a,b){return a+b;}
+import {add} from './util.js';
 ```
+
+**సారాంశం:** modular, maintainable code.
 
 ---
 
-### 10. Modules (import/export)
-Code reuse కోసం.
+## 10) Promises
 
 ```javascript
-// file.js
-export const pi = 3.14;
-
-// app.js
-import { pi } from './file.js';
+new Promise(res=>setTimeout(()=>res('Done'),1000)).then(console.log);
 ```
+
+**సారాంశం:** async flow control, callback hell నివారిస్తుంది.
 
 ---
 
-### 11. Enhanced Object Literals
-Short syntax properties & methods.
+## 11) Generators
 
 ```javascript
-let name = "Ramesh";
-let user = {
-  name,
-  greet() {
-    console.log("Hello");
-  }
-};
+function* gen(){ yield 1; yield 2; }
+const it = gen(); it.next();
 ```
+
+**సారాంశం:** execution pause/resume, lazy sequences.
 
 ---
 
-### 12. for...of Loop
-Iterables ని traverse చేయడానికి.
+## 12) Iterables & `for...of`
 
 ```javascript
-for (let num of [1,2,3]) {
-  console.log(num);
-}
+for(const ch of 'abc') console.log(ch);
 ```
+
+**సారాంశం:** iterable objects మీద loop చేయడానికి.
 
 ---
 
-### 13. Map & Set
-కొత్త collections.
+## 13) Map / Set / WeakMap / WeakSet
 
 ```javascript
-let map = new Map();
-map.set("name","Ramesh");
-
-let set = new Set([1,2,2,3]);
+const m=new Map(); m.set('a',1);
+const s=new Set([1,2,2]);
 ```
+
+**సారాంశం:** advanced collections, uniqueness, GC-friendly.
 
 ---
 
-### 14. Symbol
-Unique identifiers.
+## 14) Symbols
 
 ```javascript
-let sym = Symbol("id");
+const id = Symbol('id');
+const obj={[id]:123};
+console.log(obj[id]);
+```
+
+**సారాంశం:** collisions నివారించే unique keys.
+
+---
+
+## 15) Array & String Enhancements
+
+```javascript
+Array.from('abc');
+[1,2,3].includes(2);
+'hello'.includes('ell');
+```
+
+**సారాంశం:** array & string operations సులభం.
+
+---
+
+## 16) Object Helpers
+
+```javascript
+Object.assign({}, {a:1}, {b:2});
+Object.keys({a:1});
+Object.values({a:1});
+```
+
+**సారాంశం:** copy, merge, extract properties clean.
+
+---
+
+## 17) Proxy & Reflect
+
+```javascript
+const proxy=new Proxy({a:1},{ get(obj,prop){ return Reflect.get(obj,prop); } });
+console.log(proxy.a);
+```
+
+**సారాంశం:** meta-programming, logging, validation.
+
+---
+
+## 18) Misc Built-ins
+
+`Number.isInteger`, `Math.trunc`, `String.repeat`, `Array.fill`
+
+---
+
+## 19) Diagrams
+
+```
+ES6 Features
+ ├─ Variables & Scope (var, let, const, TDZ)
+ ├─ Functions (arrow, default params, rest/spread)
+ ├─ Strings (template literals)
+ ├─ Objects (destructuring, shorthand, classes)
+ ├─ Modules (import/export)
+ ├─ Async (Promises, Generators)
+ ├─ Collections (Map, Set, WeakMap, WeakSet)
+ └─ Meta-programming (Symbol, Proxy, Reflect)
 ```
 
 ---
 
-## 📊 Diagram (ES6 Core Features)
+## ✅ Summary Diagram
 
 ```
-ES6
- ├── Variables (let, const)
- ├── Functions (arrow, default params)
- ├── Strings (template literals)
- ├── Objects/Arrays (destructuring, spread/rest)
- ├── OOP (classes)
- ├── Async (promises, async/await)
- ├── Modules (import/export)
- ├── Collections (Map, Set)
- └── Symbol
+       ES6
+  ┌─────────────┐
+  │ Syntax      │
+  │ - let/const │
+  │ - arrow fn  │
+  │ - template  │
+  └─────────────┘
+  ┌─────────────┐
+  │ Data Struct │
+  │ - Map/Set   │
+  │ - WeakMap   │
+  └─────────────┘
+  ┌─────────────┐
+  │ Modules     │
+  │ - import    │
+  │ - export    │
+  └─────────────┘
+  ┌─────────────┐
+  │ Async       │
+  │ - Promises  │
+  │ - Generators│
+  └─────────────┘
+  ┌─────────────┐
+  │ Meta        │
+  │ - Symbol    │
+  │ - Proxy     │
+  └─────────────┘
 ```
 
 ---
 
-## 📌 Summary
+## ✅ Overall Summary
 
-- **let & const** → Block scoping, immutability  
-- **Arrow functions** → Concise, lexical `this`  
-- **Template literals** → Easier string handling  
-- **Default parameters** → Safe defaults  
-- **Destructuring** → Cleaner assignments  
-- **Spread/Rest** → Flexible function & array ops  
-- **Classes** → OOP in JS  
-- **Promises & async/await** → Asynchronous programming  
-- **Modules** → Reusable, maintainable code  
-- **Map/Set** → Better data structures  
-- **Symbol** → Unique property keys  
+ES6 తో JavaScript:
 
----
-
-## 📌 Interview Questions & Answers (తెలుగులో)
-
-**Q1. var, let, const మధ్య తేడా ఏమిటి?**  
-👉 `var` → function-scoped, `let` మరియు `const` → block-scoped. `const` తిరిగి assign చేయలేం.
-
-**Q2. Arrow functions ఎందుకు ఉపయోగిస్తారు?**  
-👉 Short syntax మరియు lexical `this` కోసం.
-
-**Q3. Destructuring ఎందుకు అవసరం?**  
-👉 Objects/Arrays నుండి values ను సులభంగా తీసుకోవడానికి.
-
-**Q4. Spread vs Rest operators తేడా?**  
-👉 Spread values ని విస్తరిస్తుంది, Rest values ని కలుపుతుంది.
-
-**Q5. Promises ఎందుకు మంచివి?**  
-👉 Callback hell ను తప్పించుకోవచ్చు, async code clean అవుతుంది.
-
-**Q6. Modules ఎందుకు ఉపయోగిస్తారు?**  
-👉 Code reuse మరియు maintainability కోసం.
-
-**Q7. ES6 classes ఎందుకు prototypes కంటే బెటర్?**  
-👉 OOP style code రాయడానికి సులభంగా ఉంటుంది.
-
-**Q8. Map vs Object తేడా?**  
-👉 Map లో ఏదైనా type keys గా వాడొచ్చు, insertion order ని maintain చేస్తుంది.
-
-**Q9. Symbol ఉపయోగం ఏమిటి?**  
-👉 Unique keys కోసం, name clashes తప్పించుకోవడానికి.
-
----
-
-✅ **మొత్తం:** ES6 features వల్ల JavaScript code modern, readable మరియు interview-ready అవుతుంది 🚀
+* cleaner syntax, block scoping, constants
+* modular code (import/export)
+* promises & generators తో async flow
+* advanced collections & meta-programming
+* ఆధునిక వెబ్ డెవలప్‌మెంట్ మరియు interviews కోసం అవసరం
